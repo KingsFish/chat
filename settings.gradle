@@ -7,4 +7,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "chat"
 include ':app'
-include ':tool'
+include ':tool-core'
+include ':tool-impl'

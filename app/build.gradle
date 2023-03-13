@@ -12,6 +12,11 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        loadConfig()
+        buildConfigField "String", "API_KEY", "${project.ext.api_key}"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildTypes {
@@ -21,17 +26,46 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.2.0'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+def loadConfig() {
+    def localFile = project.rootProject.file("local.properties")
+    if (localFile.exists()) {
+        Properties localProperties = new Properties()
+        localProperties.load(localFile.newDataInputStream())
+        project.ext.api_key = localProperties.getProperty("API_KEY")
     }
 }
 
 dependencies {
 
+    implementation(project(":tool-core"))
+    implementation(project(":tool-impl"))
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.2.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
